@@ -27,8 +27,6 @@ void laser_callback(sensor_msgs::LaserScan ls){
     angle_min = angle_min_set ? angle_min : ls.angle_min;
     angle_max = angle_max_set ? angle_max : ls.angle_max;
 
-    ls.angle_min = angle_min > ls.angle_min ? angle_min: ls.angle_min;
-    ls.angle_max = ls.angle_min;
     ls.range_max = range_max != 0.0 ? range_max : ls.range_max;
 
     for (long count = ls.ranges.size() - 1; count >=0 ; count --){
@@ -44,27 +42,22 @@ void laser_callback(sensor_msgs::LaserScan ls){
 
         float ang = ls.angle_min + ls.angle_increment * float(count);
 
-        bool removed = false;
         if (ang < angle_min - 1e-6 || ang > angle_max  + 1e-6){
             ls.ranges.erase(ls.ranges.begin() + count);
             if (ls.intensities.size() > count){
                 ls.intensities.erase(ls.intensities.begin() + count);
             }
-            removed = true;
         }else{
             if (count % decimation != 0){
                 ls.ranges.erase(ls.ranges.begin() + count);
                 if (ls.intensities.size() > count){
                     ls.intensities.erase(ls.intensities.begin() + count);
                 }
-                removed = true;
             }
         }
-        if (!removed && ang > ls.angle_max){
-            ls.angle_max = ang;
-        }
     }
-
+    ls.angle_min = angle_min;
+    ls.angle_max = angle_min + ls.angle_increment*(ls.ranges.size() - 1);
     ls.angle_increment *= decimation;
 
     if (spurious != 0.0){
