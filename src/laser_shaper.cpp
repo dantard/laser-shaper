@@ -56,9 +56,9 @@ void laser_callback(sensor_msgs::LaserScan ls){
             }
         }
     }
+    ls.angle_increment *= decimation;
     ls.angle_min = angle_min;
     ls.angle_max = angle_min + ls.angle_increment*(ls.ranges.size() - 1);
-    ls.angle_increment *= decimation;
 
     if (spurious != 0.0){
         for (unsigned int count = 1; count < ls.ranges.size() - 1; count ++){
