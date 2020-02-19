@@ -75,8 +75,13 @@ void laser_callback(sensor_msgs::LaserScan ls){
         ls.intensities.clear();
     }
 
+
     if (output_frame_set){
         ls.header.frame_id = output_frame;
+    }
+
+    if (ls.header.frame_id.at(0)=='/'){
+        ls.header.frame_id = ls.header.frame_id.substr(1);
     }
 
     pub.publish(ls);
