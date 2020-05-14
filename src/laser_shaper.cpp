@@ -113,7 +113,7 @@ int main(int argc, char **argv)
   angle_max = angle_max*float(M_PI)/180.0f;
   angle_min = angle_min*float(M_PI)/180.0f;
 
-  ros::Subscriber sub = n.subscribe("/scan", 1000, laser_callback);
+  ros::Subscriber sub = n.subscribe("/scan", 1, laser_callback);
   pub = n.advertise<sensor_msgs::LaserScan>("/scan/shaped", 1);
   ros::spin();
 
